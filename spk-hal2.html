@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>SPK - Halaman 2</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e9e9e9;
+      text-align: center;
+      padding: 50px;
+    }
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      display: inline-block;
+    }
+    select, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>Sistem Pencari Kupon (SPK)</h2>
+    <h3>Halaman 2: Gabungan Nomor 3 Bagian</h3>
+    <p>Format: <strong>00</strong> (default) + 2 digit + 2 digit</p>
+
+    <select id="part2">
+      <option value="">-- Pilih Bagian Kedua --</option>
+      <script>
+        for (let i = 0; i <= 99; i++) {
+          let num = i.toString().padStart(2, '0');
+          document.write(`<option value="${num}">${num}</option>`);
+        }
+      </script>
+    </select>
+
+    <select id="part3">
+      <option value="">-- Pilih Bagian Ketiga --</option>
+      <script>
+        for (let i = 0; i <= 99; i++) {
+          let num = i.toString().padStart(2, '0');
+          document.write(`<option value="${num}">${num}</option>`);
+        }
+      </script>
+    </select>
+
+    <br>
+    <button onclick="cekKupon()">Cek Nomor</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function cekKupon() {
+      const part1 = "00";
+      const part2 = document.getElementById("part2").value;
+      const part3 = document.getElementById("part3").value;
+      const resultBox = document.getElementById("result");
+
+      if (!part2 || !part3) {
+        resultBox.innerHTML = "⚠️ Pilih bagian kedua dan ketiga!";
+        return;
+      }
+
+      const fullNumber = part1 + part2 + part3;
+      const angka = parseInt(fullNumber);
+
+      if (angka >= 4301 && angka <= 4400) {
+        resultBox.innerHTML = `✅ Nomor ${fullNumber} ditemukan!<br>Cek hadiah!`;
+      } else {
+        resultBox.innerHTML = `❌ Nomor ${fullNumber} tidak ditemukan.`;
+      }
+    }
+  </script>
+
+</body>
+</html>
