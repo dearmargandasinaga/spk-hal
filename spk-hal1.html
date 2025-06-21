@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>SPK - Halaman 1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: inline-block;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 18px;
+      margin: 5px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>Sistem Pencari Kupon (SPK)</h2>
+    <h3>Halaman 1: Masukkan 3 Digit Terakhir Kupon</h3>
+    <p>Format sistem: <strong>004 + 3 digit</strong> (contoh: 351 → jadi 004351)</p>
+    <input type="number" id="inputKupon" placeholder="Contoh: 351" min="0" max="999">
+    <br>
+    <button onclick="cekKupon()">Cek Nomor</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function cekKupon() {
+      const input = document.getElementById('inputKupon').value.padStart(3, '0');
+      const fullNumber = "004" + input;
+      const angka = parseInt(fullNumber);
+
+      if (angka >= 4301 && angka <= 4400) {
+        document.getElementById('result').innerHTML = 
+          `✅ Nomor ${fullNumber} ditemukan!<br>Cek hadiah!`;
+      } else {
+        document.getElementById('result').innerHTML = 
+          `❌ Nomor ${fullNumber} tidak ditemukan.`;
+      }
+    }
+  </script>
+
+</body>
+</html>
