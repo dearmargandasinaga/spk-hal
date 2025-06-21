@@ -2,67 +2,93 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>SPK - Halaman 2</title>
+  <title>Sistem Pencari Kupon (SPK) - Halaman 2</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #e9e9e9;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #d3cce3, #e9e4f0);
+      margin: 0;
+      padding: 40px;
       text-align: center;
-      padding: 50px;
     }
     .box {
-      background: #fff;
+      background: white;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.15);
-      display: inline-block;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: auto;
     }
-    select, button {
+    h2 {
+      color: #4a148c;
+    }
+    input, select, button {
       padding: 10px;
       font-size: 16px;
-      margin: 5px;
+      margin: 10px 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #6a1b9a;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4a148c;
     }
     #result {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
     }
+    .section-title {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #333;
+    }
   </style>
 </head>
 <body>
 
   <div class="box">
-    <h2>Sistem Pencari Kupon (SPK)</h2>
-    <h3>Halaman 2: Gabungan Nomor 3 Bagian</h3>
-    <p>Format: <strong>00</strong> (default) + 2 digit + 2 digit</p>
+    <h2>SPK - Sistem Pencari Kupon</h2>
+    <div>
+      <div class="section-title">🔹 Mode Manual 3 Bagian (00 + 2 Digit + 2 Digit)</div>
+      <select id="part2">
+        <option value="">Bagian Kedua (00–99)</option>
+        <script>
+          for (let i = 0; i <= 99; i++) {
+            let num = i.toString().padStart(2, '0');
+            document.write(`<option value="${num}">${num}</option>`);
+          }
+        </script>
+      </select>
 
-    <select id="part2">
-      <option value="">-- Pilih Bagian Kedua --</option>
-      <script>
-        for (let i = 0; i <= 99; i++) {
-          let num = i.toString().padStart(2, '0');
-          document.write(`<option value="${num}">${num}</option>`);
-        }
-      </script>
-    </select>
+      <select id="part3">
+        <option value="">Bagian Ketiga (00–99)</option>
+        <script>
+          for (let i = 0; i <= 99; i++) {
+            let num = i.toString().padStart(2, '0');
+            document.write(`<option value="${num}">${num}</option>`);
+          }
+        </script>
+      </select>
 
-    <select id="part3">
-      <option value="">-- Pilih Bagian Ketiga --</option>
-      <script>
-        for (let i = 0; i <= 99; i++) {
-          let num = i.toString().padStart(2, '0');
-          document.write(`<option value="${num}">${num}</option>`);
-        }
-      </script>
-    </select>
+      <br>
+      <button onclick="cekKuponManual()">Cek Manual</button>
+    </div>
 
+    <div class="section-title">🧠 Penemu Cerdas Sistem Kupon (PCSK)</div>
+    <input type="number" id="inputSmart" placeholder="Contoh: 3456" min="0" max="9999">
     <br>
-    <button onclick="cekKupon()">Cek Nomor</button>
+    <button onclick="cekKuponCerdas()">Cek Cerdas</button>
+
     <div id="result"></div>
   </div>
 
   <script>
-    function cekKupon() {
+    function cekKuponManual() {
       const part1 = "00";
       const part2 = document.getElementById("part2").value;
       const part3 = document.getElementById("part3").value;
@@ -76,13 +102,32 @@
       const fullNumber = part1 + part2 + part3;
       const angka = parseInt(fullNumber);
 
-      if (angka >= 4301 && angka <= 4400) {
-        resultBox.innerHTML = `✅ Nomor ${fullNumber} ditemukan!<br>Cek hadiah!`;
+      if (angka < 2000) {
+        resultBox.innerHTML = `❌ Nomor ${fullNumber} tidak valid. Minimal 002000.`;
       } else {
-        resultBox.innerHTML = `❌ Nomor ${fullNumber} tidak ditemukan.`;
+        resultBox.innerHTML = `✅ Nomor ${fullNumber} valid!<br>Silakan cek hadiah.`;
+      }
+    }
+
+    function cekKuponCerdas() {
+      const input = document.getElementById("inputSmart").value.padStart(4, '0');
+      const fullNumber = "00" + input;
+      const angka = parseInt(fullNumber);
+      const resultBox = document.getElementById("result");
+
+      if (isNaN(angka)) {
+        resultBox.innerHTML = "⚠️ Masukkan 4 digit angka kupon!";
+        return;
+      }
+
+      if (angka < 2000) {
+        resultBox.innerHTML = `❌ Nomor ${fullNumber} tidak valid. Minimal 002000.`;
+      } else {
+        resultBox.innerHTML = `✅ Nomor ${fullNumber} valid ditemukan!<br>Cek hadiah sekarang.`;
       }
     }
   </script>
 
 </body>
 </html>
+
