@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Sistem Pencari Kupon (SPK) - Halaman 2</title>
+  <title>SPK - Sistem Pencari Kupon</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -16,7 +16,7 @@
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
     }
     h2 {
@@ -46,6 +46,32 @@
       margin-top: 30px;
       font-size: 18px;
       color: #333;
+      border-top: 1px solid #ccc;
+      padding-top: 15px;
+    }
+
+    /* Alert animation */
+    .alert {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ffeb3b;
+      color: #333;
+      padding: 15px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-weight: bold;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s ease;
+      z-index: 1000;
+    }
+
+    .alert.show {
+      opacity: 1;
+      pointer-events: auto;
+      top: 40px;
     }
   </style>
 </head>
@@ -53,78 +79,123 @@
 
   <div class="box">
     <h2>SPK - Sistem Pencari Kupon</h2>
-    <div>
-      <div class="section-title">🔹 Mode Manual 3 Bagian (00 + 2 Digit + 2 Digit)</div>
-      <select id="part2">
-        <option value="">Bagian Kedua (00–99)</option>
-        <script>
-          for (let i = 0; i <= 99; i++) {
-            let num = i.toString().padStart(2, '0');
-            document.write(`<option value="${num}">${num}</option>`);
-          }
-        </script>
-      </select>
 
-      <select id="part3">
-        <option value="">Bagian Ketiga (00–99)</option>
-        <script>
-          for (let i = 0; i <= 99; i++) {
-            let num = i.toString().padStart(2, '0');
-            document.write(`<option value="${num}">${num}</option>`);
-          }
-        </script>
-      </select>
+    <!-- Fitur 1: Manual 3 Bagian -->
+    <div class="section-title">🔹 Mode Manual 3 Bagian (00 + 2 Digit + 2 Digit)</div>
+    <select id="part2">
+      <option value="">Bagian Kedua (00–99)</option>
+      <script>
+        for (let i = 0; i <= 99; i++) {
+          let num = i.toString().padStart(2, '0');
+          document.write(`<option value="${num}">${num}</option>`);
+        }
+      </script>
+    </select>
 
-      <br>
-      <button onclick="cekKuponManual()">Cek Manual</button>
-    </div>
+    <select id="part3">
+      <option value="">Bagian Ketiga (00–99)</option>
+      <script>
+        for (let i = 0; i <= 99; i++) {
+          let num = i.toString().padStart(2, '0');
+          document.write(`<option value="${num}">${num}</option>`);
+        }
+      </script>
+    </select>
 
+    <br>
+    <button onclick="cekKuponManual()">Cek Manual</button>
+
+    <!-- Fitur 2: Penemu Cerdas -->
     <div class="section-title">🧠 Penemu Cerdas Sistem Kupon (PCSK)</div>
-    <input type="number" id="inputSmart" placeholder="Contoh: 3456" min="0" max="9999">
+    <input type="number" id="inputSmart" placeholder="Masukkan 4 digit terakhir (contoh: 3456)" min="0" max="9999">
     <br>
     <button onclick="cekKuponCerdas()">Cek Cerdas</button>
+
+    <!-- Fitur 3: Manual Full -->
+    <div class="section-title">🔧 Full Manual Input (6 Digit)</div>
+    <input type="number" id="fullManual" placeholder="Contoh: 004321" min="0" max="999999">
+    <br>
+    <button onclick="cekKuponFull()">Cek Full Manual</button>
+
+    <!-- Fitur 4: Manual Terbantu -->
+    <div class="section-title">⚡ Manual Terbantu (2 Digit ke-2 Otomatis)</div>
+    <select id="bantu2Digit">
+      <option value="">Pilih 2 Digit</option>
+      <script>
+        for (let i = 0; i <= 99; i++) {
+          let num = i.toString().padStart(2, '0');
+          document.write(`<option value="${num}">${num}</option>`);
+        }
+      </script>
+    </select>
+    <br>
+    <button onclick="cekBantu()">Cek Terbantu</button>
 
     <div id="result"></div>
   </div>
 
+  <!-- Alert box -->
+  <div id="alertBox" class="alert"></div>
+
   <script>
+    function tampilkanHasil(nomor, valid) {
+      const res = document.getElementById("result");
+      if (valid) {
+        res.innerHTML = `✅ Nomor <strong>${nomor}</strong> valid!<br>Silakan cek hadiah!`;
+      } else {
+        res.innerHTML = `❌ Nomor <strong>${nomor}</strong> tidak valid. Minimal 002000.`;
+      }
+    }
+
+    function tampilPeringatan(pesan) {
+      const alert = document.getElementById("alertBox");
+      alert.innerHTML = "⚠️ " + pesan;
+      alert.classList.add("show");
+      setTimeout(() => {
+        alert.classList.remove("show");
+      }, 3000);
+    }
+
     function cekKuponManual() {
       const part1 = "00";
       const part2 = document.getElementById("part2").value;
       const part3 = document.getElementById("part3").value;
-      const resultBox = document.getElementById("result");
-
       if (!part2 || !part3) {
-        resultBox.innerHTML = "⚠️ Pilih bagian kedua dan ketiga!";
+        tampilPeringatan("Pilih bagian kedua dan ketiga!");
         return;
       }
-
-      const fullNumber = part1 + part2 + part3;
-      const angka = parseInt(fullNumber);
-
-      if (angka < 2000) {
-        resultBox.innerHTML = `❌ Nomor ${fullNumber} tidak valid. Minimal 002000.`;
-      } else {
-        resultBox.innerHTML = `✅ Nomor ${fullNumber} valid!<br>Silakan cek hadiah.`;
-      }
+      const nomor = part1 + part2 + part3;
+      tampilkanHasil(nomor, parseInt(nomor) >= 2000);
     }
 
     function cekKuponCerdas() {
       const input = document.getElementById("inputSmart").value.padStart(4, '0');
-      const fullNumber = "00" + input;
-      const angka = parseInt(fullNumber);
-      const resultBox = document.getElementById("result");
-
-      if (isNaN(angka)) {
-        resultBox.innerHTML = "⚠️ Masukkan 4 digit angka kupon!";
+      if (!input || isNaN(parseInt(input))) {
+        tampilPeringatan("Masukkan 4 digit angka kupon!");
         return;
       }
+      const nomor = "00" + input;
+      tampilkanHasil(nomor, parseInt(nomor) >= 2000);
+    }
 
-      if (angka < 2000) {
-        resultBox.innerHTML = `❌ Nomor ${fullNumber} tidak valid. Minimal 002000.`;
-      } else {
-        resultBox.innerHTML = `✅ Nomor ${fullNumber} valid ditemukan!<br>Cek hadiah sekarang.`;
+    function cekKuponFull() {
+      const input = document.getElementById("fullManual").value.padStart(6, '0');
+      if (!input || isNaN(parseInt(input))) {
+        tampilPeringatan("Masukkan 6 digit nomor kupon!");
+        return;
       }
+      tampilkanHasil(input, parseInt(input) >= 2000);
+    }
+
+    function cekBantu() {
+      const part2 = document.getElementById("bantu2Digit").value;
+      if (!part2) {
+        tampilPeringatan("Pilih 2 digit dulu!");
+        return;
+      }
+      const part3 = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+      const nomor = "00" + part2 + part3;
+      tampilkanHasil(nomor, parseInt(nomor) >= 2000);
     }
   </script>
 
